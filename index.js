@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 var fs = require('fs')
-	, path = require('path')
-	, program = require('commander')
+  , path = require('path')
+  , program = require('commander')
   , colors = require('colors')
   , inquirer = require('inquirer')
   , childProcess = require('child_process')
@@ -92,11 +92,11 @@ kbbLess.compileKBB = function() {
 kbbLess.watchDir = function(path) {
   fs.readdir(path, function(err, files) {
     if (err === null) {
-      var bootstrap = path + '/bootstrap';
-      var common = path + '/common';
-      var desktop = path + '/desktop';
-      var smartphone = path + '/smartphone';
-      var tablet = path + '/tablet';
+      var bootstrap = path + '/bootstrap' || path + '\\bootstrap';
+      var common = path + '/common' || path + '\\common';
+      var desktop = path + '/desktop' || path + '\\desktop';
+      var smartphone = path + '/smartphone' || path + '\\smartphone';
+      var tablet = path + '/tablet' || path + '\\tablet';
 
       console.log('(ಠ_ಠ) Watching over your OOLess files'.cyan);
       console.log();
@@ -113,11 +113,11 @@ kbbLess.watchDir = function(path) {
 
 kbbLess.compileDir = function(file, path) {
   var less;
-  var isBootstrap = file.indexOf('OOLess/bootstrap') > -1;
-  var isCommon = file.indexOf('OOLess/common') > -1;
-  var isDesktop = file.indexOf('OOLess/desktop') > -1;
-  var isSmartphone = file.indexOf('OOLess/smartphone') > -1
-  var isTablet = file.indexOf('OOLess/tablet') > -1
+  var isBootstrap = file.indexOf('OOLess/bootstrap') > -1 || file.indexOf('OOLess\\bootstrap') > -1;
+  var isCommon = file.indexOf('OOLess/common') > -1 || file.indexOf('OOLess\\common') > -1;
+  var isDesktop = file.indexOf('OOLess/desktop') > -1 || file.indexOf('OOLess\\desktop') > -1;
+  var isSmartphone = file.indexOf('OOLess/smartphone') > -1 || file.indexOf('OOLess\\smartphone') > -1;
+  var isTablet = file.indexOf('OOLess/tablet') > -1 || file.indexOf('OOLess\\tablet') > -1;
   var compileFile = file.split('/').slice(-1).pop();
   var fileName = compileFile.split('.less')[0];
   var lessifyDesktop = 'lessc ' + path + '/desktop/desktop.less > ' + path + '/css/desktop.css';
@@ -169,7 +169,7 @@ kbbLess.compileDir = function(file, path) {
 
 
 program
-  .version('0.0.1')
+  .version('0.0.2')
   .usage('less')
   .option('-f, --file [less]', 'Single file to watch/compile')
   .option('-o, --output [path]', 'Output path for single compile less')
