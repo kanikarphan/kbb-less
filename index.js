@@ -81,7 +81,7 @@ kbbLess.compileKBB = function() {
 
         break;
       case 'no':
-          console.log("(╥﹏╥) Sorry you're on your own".cyan);
+          console.log("(╥_╥) Sorry you're on your own".cyan);
           console.log();
         break;
     }
@@ -98,7 +98,7 @@ kbbLess.watchDir = function(path) {
       var smartphone = path + '/smartphone' || path + '\\smartphone';
       var tablet = path + '/tablet' || path + '\\tablet';
 
-      console.log('(ಠ_ಠ) Watching over your OOLess files'.cyan);
+      console.log('(O_O) Watching over your OOLess files'.cyan);
       console.log();
 
       watch([bootstrap, common, desktop, smartphone, tablet], function(file) {
