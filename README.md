@@ -5,7 +5,13 @@ Simply watches over our KBB OOLess files and auto-compiles it.
 ## Installing
 
 ```
-npm i -g kbb && npm i -g less
+npm i -g kbb
+```
+
+Afterward KBB Less is install run the folowwing command
+
+```
+kbb setup
 ```
 
 ## Usage
@@ -22,7 +28,8 @@ Usage:
 
 Commands:
 
-    less   watch/compile KBB OOLess
+    less    watch/compile KBB OOLess
+    setup   install the necessary file dependencies
 
 Options:
 

@@ -14,9 +14,9 @@ kbbLess.livereload = function(path) {
   var live;
 
   if (process.platform === 'win32') {
-    var cmdLive = 'livereload ' + path + '\\css';
+    var cmdLive = 'livereload ' + path + '\\css -i 100';
   } else {
-    var cmdLive = 'livereload ' + path + '/css';
+    var cmdLive = 'livereload ' + path + '/css -i 100';
   }
 
   live = childProcess.exec(cmdLive, function (err, stdout, stderr) {
@@ -185,6 +185,19 @@ kbbLess.compileDir = function(file, path) {
 
 };
 
+kbbLess.setupKBB = function() {
+  var setup;
+  var cmdSetup = 'npm i -g less && npm i -g livereload';
+
+  setup = childProcess.exec(cmdSetup, function (err, stdout, stderr) {
+    if (err) {
+      console.log(stderr);
+    } else {
+      console.log('setup was successfully!'.green);
+    }
+  });
+};
+
 program
   .version('0.0.2')
   .usage('less')
@@ -196,6 +209,13 @@ program
   .description('watch/compile KBB OOLess')
   .action(function() {
     kbbLess.compileKBB();
+  });
+
+program
+  .command('setup')
+  .description('install the necessary file dependencies')
+  .action(function() {
+    kbbLess.setupKBB();
   });
 
 program.parse(process.argv);
