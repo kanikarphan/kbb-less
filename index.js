@@ -10,6 +10,22 @@ var fs = require('fs')
 
 var kbbLess = module.exports;
 
+kbbLess.livereload = function(path) {
+  var live;
+
+  if (process.platform === 'win32') {
+    var cmdLive = 'livereload ' + path + '\\css';
+  } else {
+    var cmdLive = 'livereload ' + path + '/css';
+  }
+
+  live = childProcess.exec(cmdLive, function (err, stdout, stderr) {
+    if (err) {
+      console.log(stderr);
+    }
+  });
+};
+
 kbbLess.compileFile = function(file, output) {
   var less;
   var compileFile = file.split('/').slice(-1).pop();
@@ -47,6 +63,7 @@ kbbLess.savePath = function(location) {
   fs.writeFile(outputFilename, JSON.stringify(myConfig, null, 2), function(err) {
     if(!err) {
       kbbLess.watchDir(location);
+      kbbLess.livereload(location);
     }
   }); 
 };
@@ -76,6 +93,7 @@ kbbLess.compileKBB = function() {
           } else {
             var config = require(process.cwd() + '/config');
             kbbLess.watchDir(config.path);
+            kbbLess.livereload(config.path);
           }
         });
 
@@ -166,7 +184,6 @@ kbbLess.compileDir = function(file, path) {
   }
 
 };
-
 
 program
   .version('0.0.2')
