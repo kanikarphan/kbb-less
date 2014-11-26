@@ -26,6 +26,20 @@ kbbLess.livereload = function(path) {
   });
 };
 
+kbbLess.livereloadAll = function(path) {
+  var live;
+  var dir = path.replace(/\\/g, '/');
+  var dirPath = dir.split('/Styles/OOLess');
+  var watchDir = dirPath[0];
+  var cmdLive = 'livereload ' + watchDir + ' -i 200';
+
+  live = childProcess.exec(cmdLive, function (err, stdout, stderr) {
+    if (err) {
+      console.log(stderr);
+    }
+  });
+};
+
 kbbLess.compileFile = function(file, output) {
   var less;
   var compileFile = file.split('/').slice(-1).pop();
@@ -68,20 +82,35 @@ kbbLess.savePath = function(location) {
   }); 
 };
 
-kbbLess.compileKBB = function() {
+kbbLess.compileKBB = function(type) {
 
   var promptFile,
       promptSave;
 
-  var choose = [{
-    type: 'list',
-    name: 'ui',
-    message: 'Do you want to compile KBB OOLess?'.yellow,
-    choices: [
-      'yes',
-      'no'
-    ]
-  }];
+  if (type === 'all') {
+
+    var choose = [{
+      type: 'list',
+      name: 'ui',
+      message: 'Do you want to compile KBB OOLess and livereload on all file?'.yellow,
+      choices: [
+        'yes',
+        'no'
+      ]
+    }];
+
+  } else {
+    var choose = [{
+      type: 'list',
+      name: 'ui',
+      message: 'Do you want to compile and livereload KBB OOLess?'.yellow,
+      choices: [
+        'yes',
+        'no'
+      ]
+    }];
+  }
+
 
   inquirer.prompt( choose, function(answer) {
     switch (answer.ui) {
@@ -92,8 +121,14 @@ kbbLess.compileKBB = function() {
             kbbLess.pathLoc();
           } else {
             var config = require(process.cwd() + '/config');
-            kbbLess.watchDir(config.path);
-            kbbLess.livereload(config.path);
+
+            if (type === 'all') {
+              kbbLess.watchDir(config.path, 'all');
+              kbbLess.livereloadAll(config.path);
+            } else {
+              kbbLess.watchDir(config.path, 'ooless');
+              kbbLess.livereload(config.path);
+            }
           }
         });
 
@@ -107,7 +142,7 @@ kbbLess.compileKBB = function() {
 
 };
 
-kbbLess.watchDir = function(path) {
+kbbLess.watchDir = function(path, type) {
   fs.readdir(path, function(err, files) {
     if (err === null) {
       var bootstrap = path + '/bootstrap' || path + '\\bootstrap';
@@ -116,7 +151,11 @@ kbbLess.watchDir = function(path) {
       var smartphone = path + '/smartphone' || path + '\\smartphone';
       var tablet = path + '/tablet' || path + '\\tablet';
 
-      console.log('(O_O) Watching over your OOLess files'.cyan);
+      if (type === 'all') {
+        console.log('(O_O) Watching over all your files'.cyan);
+      } else {
+        console.log('(O_O) Watching over your OOLess files'.cyan);
+      }
       console.log();
 
       watch([bootstrap, common, desktop, smartphone, tablet], function(file) {
@@ -208,7 +247,7 @@ program
   .command('less')
   .description('watch/compile KBB OOLess')
   .action(function() {
-    kbbLess.compileKBB();
+    kbbLess.compileKBB('ooless');
   });
 
 program
@@ -216,6 +255,13 @@ program
   .description('install the necessary file dependencies')
   .action(function() {
     kbbLess.setupKBB();
+  });
+
+program
+  .command('all')
+  .description('watch/compile and livereload on all file')
+  .action(function() {
+    kbbLess.compileKBB('all');
   });
 
 program.parse(process.argv);
